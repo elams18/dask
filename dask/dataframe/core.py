@@ -1684,6 +1684,18 @@ Dask Name: {name}, {task} tasks"""
             if isinstance(self, DataFrame):
                 result.divisions = (min(self.columns), max(self.columns))
             return handle_out(out, result)
+    
+    @derived_from(pd.Dataframe)
+    def mode(self, axis=0, numeric_only=False, dropna=True):
+        axis = self._validate_axis(axis)
+        _raise_if_object_series(self, "mode")
+        meta = self._meta_nonempty.mode()
+        if axis == 1:
+            result = map_partitions(
+                M.mode,
+                self,
+                
+            )
 
     @derived_from(pd.DataFrame)
     def var(
